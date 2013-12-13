@@ -312,6 +312,27 @@ class Chargify {
 		return $this->error($result->response, $result->code);
 	}
 	
+	public function adjust_subscription($subscription_id, $data) {
+        $data = array(
+            'adjustment' => $data
+        );
+            
+        $result = $this->query('/subscriptions/' . $subscription_id . '/adjustments.json', 'post', $data);
+
+        if ($result->code == 200) {
+            $subscription = json_decode($result->response);
+
+            if (count($subscription) == 1) {
+                return $subscription->subscription;
+            }
+
+            return false;
+        }
+//        return $result->response;
+
+        $this->error($result->response, $result->code); 
+    }
+	
 	/**************************************************************************************************************
 	 Charges
 	***************************************************************************************************************/
